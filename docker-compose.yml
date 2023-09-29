@@ -1,0 +1,29 @@
+#versi docker compose
+version: '2'
+
+#kumpulan sercvice atau container
+services:
+  #nama service untuk database
+  item-db:
+    #image yang digunakan untuk membuat container adalah mongodb versi 3
+    image: mongo:3
+    #settingan selalu restart ketika container berhenti
+    restart: always
+    #volume yang akan digunakan bernama app-data yang mengarah ke folder /data/db di container
+    volumes:
+      - app-db:/data/db
+  #nama service untuk applikasi
+  item-app:
+    #image yang digunakan untuk membuat container adalah mongodb item-app yang sudah kita upload ke github packages
+    image: ghcr.io/dedyarhenz/item-app:v1
+    #settingan selalu restart ketika container berhenti
+    restart: always
+    #mengarahkan port 80 yang ada di local komputer kita ke port 8080 yang ada dicontainer
+    ports:
+      - 80:8080
+    #fungsi untuk menunggu service item-db dulu sampai jalan lalu mulai menjalankan service item-app
+    depends_on:
+      - item-db
+#volume yang akan digunakan untuk service yang ada di docker-compose kita
+volumes:
+  app-db:
